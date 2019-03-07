@@ -18,7 +18,6 @@ csv_path = os.path.join("..", "election_data.csv")
 
 
 count = 0
-total = 0
 votes = dict()
 
 
@@ -34,9 +33,16 @@ with open(csv_path) as csv_file:
         votes[row[2]] = votes.get(row[2],0) + 1
 
 
-# In[6]:
+# In[42]:
 
 
-print(votes)
-print(count)
+winvotes = 0
+for key in votes:
+    pct = votes[key]/count*100
+    print(f"{key},{votes[key]},{pct:.1f}")
+    if votes[key] > winvotes:
+        winvotes = votes[key]
+        winner = key
+print(f"total votes {count}")
+print(f"winner {winner}")
 
