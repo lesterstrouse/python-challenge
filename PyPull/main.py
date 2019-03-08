@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[2]:
+# In[1]:
 
 
 import os
@@ -11,7 +11,7 @@ import csv
 # In[3]:
 
 
-csv_path = os.path.join("..", "election_data.csv")
+csv_path = os.path.join("..","..","..","election_data.csv")
 
 
 # In[4]:
@@ -33,7 +33,7 @@ with open(csv_path) as csv_file:
         votes[row[2]] = votes.get(row[2],0) + 1
 
 
-# In[7]:
+# In[6]:
 
 
 winvotes = 0
@@ -47,7 +47,7 @@ print(f"total votes {count}")
 print(f"winner {winner}")
 
 
-# In[13]:
+# In[7]:
 
 
 text_path = os.path.join("..", "election_summ.txt")

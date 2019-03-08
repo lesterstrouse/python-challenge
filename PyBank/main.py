@@ -1,14 +1,14 @@
 
 # coding: utf-8
 
-# In[11]:
+# In[1]:
 
 
 import os
 import csv
 
 
-# In[19]:
+# In[2]:
 
 
 count = 0
@@ -17,13 +17,13 @@ gincrease = 0
 gdecrease = 0
 
 
-# In[12]:
+# In[4]:
 
 
-csv_path = os.path.join("..", "budget_data.csv")
+csv_path = os.path.join("..","..","..", "budget_data.csv")
 
 
-# In[26]:
+# In[5]:
 
 
 with open(csv_path) as csv_file:
@@ -40,7 +40,7 @@ with open(csv_path) as csv_file:
             gdecrease = amt
 
 
-# In[28]:
+# In[6]:
 
 
 print(f"no of months {count}")
