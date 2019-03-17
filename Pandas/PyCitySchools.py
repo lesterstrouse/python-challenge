@@ -115,9 +115,25 @@ school_budget = school_data.set_index("school_name")['budget']
 ave_math = sch_group_df['math_score'].mean()
 ave_read = sch_group_df['reading_score'].mean()
 PerStudent_budg = school_budget/Student_count
-#passm = student_data.set_index('school name').loc[(student_data['math_score']>69)['student_name'].count()]
+
+
+# In[11]:
+
+
+passr=school_data_complete.loc[(school_data_complete['reading_score']>69)].groupby('school_name')['student_name'].count().values
+passm=school_data_complete.loc[(school_data_complete['math_score']>69)].groupby('school_name')['student_name'].count().values
+passr_pct = []
+passm_pct = []
+#passr_pct = pr/Student_count*100 for pr in passr
+#passm_pct = pm/Student_count*100 for pm in passm
+
+
+# In[13]:
+
+
+
 #passm_pct = passm /Student_count * 100
-school_dct_sch = {'Type':school_type,'Total Students':Student_count,                'Budget':school_budget,'PerStudent Budget':PerStudent_budg,                 'Average Math Score':ave_math,'Average Reading Score':ave_read                 }
+school_dct_sch = {'Type':school_type,'Total Students':Student_count,                'Budget':school_budget,'PerStudent Budget':PerStudent_budg,                 'Average Math Score':ave_math,'Average Reading Score':ave_read,                'Pass Read Cnt':passr,'Pass Math Cnt':passm }
 school_df_sch = pd.DataFrame(school_dct_sch)
 school_df_sch.head()
 
