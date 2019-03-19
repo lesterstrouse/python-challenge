@@ -60,13 +60,13 @@ school_data_complete = pd.merge(student_data, school_data, how="left", on=["scho
 student_data.head()
 
 
-# In[5]:
+# In[4]:
 
 
 school_data.head()
 
 
-# In[6]:
+# In[5]:
 
 
 student_count = school_data_complete['student_name'].count()
@@ -104,7 +104,7 @@ school_df
 
 # * Sort and display the top five schools in overall passing rate
 
-# In[7]:
+# In[6]:
 
 
 #sch_count_df = pd.DataFrame(school_data_complete['school_name'].value_counts())
@@ -117,37 +117,34 @@ ave_read = sch_group_df['reading_score'].mean()
 PerStudent_budg = school_budget/Student_count
 
 
-# In[8]:
+# In[10]:
 
 
+#ave_total = (ave_math + ave_read)/2
 passr=school_data_complete.loc[(school_data_complete['reading_score']>69)].groupby('school_name')['student_name'].count().values
 passm=school_data_complete.loc[(school_data_complete['math_score']>69)].groupby('school_name')['student_name'].count().values#
 
-#passm_pct = []
-#passr_pct = pr/Student_count*100 for pr in passr
-#passm_pct = pm/Student_count*100 for pm in passm
+
+# In[21]:
 
 
-# In[16]:
-
-
-
-#passm_pct = passm /Student_count * 100
-school_dct_sch = {'Type':school_type,'Total Students':Student_count,                'Budget':school_budget,'PerStudent Budget':PerStudent_budg,                 'Average Math Score':ave_math,'Average Reading Score':ave_read,                'Pass Read Cnt':passr,'Pass Math Cnt':passm }
+school_dct_sch = {'Type':school_type,'Total Students':Student_count,                'Budget':school_budget,'PerStudent Budget':PerStudent_budg,                 'Average Math Score':ave_math,'Average Reading Score':ave_read,                'Pass Read Cnt':passr,'Pass Math Cnt':passm}
 school_df_sch = pd.DataFrame(school_dct_sch)
 school_df_sch['Pass Math Pct'] = school_df_sch['Pass Math Cnt']/school_df_sch['Total Students'] * 100
 school_df_sch['Pass Read Pct'] = school_df_sch['Pass Read Cnt']/school_df_sch['Total Students'] * 100
-school_df_sch.head()
+school_df_sch['Overall Pass Pct'] = (school_df_sch['Pass Read Pct'] +  school_df_sch['Pass Math Pct'])/2
+school_df_ave = school_df_sch.sort_values(by = ['Overall Pass Pct'],ascending=False)
+school_df_ave.head()
 
 
 # ## Bottom Performing Schools (By Passing Rate)
 
 # * Sort and display the five worst-performing schools
 
-# In[14]:
+# In[22]:
 
 
-
+school_df_ave.tail()
 
 
 # ## Math Scores by Grade
