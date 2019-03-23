@@ -186,7 +186,7 @@ mc_grp_cnt_pivot
 
 
 
-# In[21]:
+# In[31]:
 
 
 # Generate the Plot (Accounting for percentages)
@@ -205,23 +205,24 @@ plt.savefig('mousecnt.png')
 
 # ## Summary Bar Graph
 
-# In[17]:
+# In[28]:
 
 
 # Calculate the percent changes for each drug
 #print(type(mouse_clin_grp_final))
 mc_grp_tumor = mouse_clin_grp_final['Tumor Volume (mm3)'].pct_change()
 # Display the data to confirm
-mouse_clin_grp_final['Pct Chg'] = mc_grp_tumor#mouse_clin_grp_final['Tumor Volume (mm3)'].pct_change
-mouse_clin_grp_final.head()
+mouse_clin_grp_final['Pct Chg'] = mc_grp_tumor
+mc_grp_final = mouse_clin_grp_final.drop(columns='Tumor Volume (mm3)')
+mc_grp_final.head()
 
 
-# In[ ]:
+# In[29]:
 
 
 # Store all Relevant Percent Changes into a Tuple
-
-
+mc_grp_summ_pivot = mc_grp_final.pivot(columns='Drug',index='Timepoint')
+mc_grp_summ_pivot.head()
 # Splice the data between passing and failing drugs
 
 
@@ -238,7 +239,7 @@ mouse_clin_grp_final.head()
 
 
 # Show the Figure
-fig.show()
+#fig.show()
 
 
 # In[14]:
