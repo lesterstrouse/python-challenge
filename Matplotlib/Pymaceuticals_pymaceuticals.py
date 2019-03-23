@@ -205,24 +205,22 @@ plt.savefig('mousecnt.png')
 
 # ## Summary Bar Graph
 
-# In[28]:
+# In[50]:
 
 
 # Calculate the percent changes for each drug
-#print(type(mouse_clin_grp_final))
-mc_grp_tumor = mouse_clin_grp_final['Tumor Volume (mm3)'].pct_change()
+mc_grp_pct = (mc_grp_final_df.iloc[-1] - mc_grp_final_df.iloc[0])/mc_grp_final_df.iloc[0]*100
 # Display the data to confirm
-mouse_clin_grp_final['Pct Chg'] = mc_grp_tumor
-mc_grp_final = mouse_clin_grp_final.drop(columns='Tumor Volume (mm3)')
-mc_grp_final.head()
+mc_grp_pct
 
 
-# In[29]:
+# In[58]:
 
 
 # Store all Relevant Percent Changes into a Tuple
-mc_grp_summ_pivot = mc_grp_final.pivot(columns='Drug',index='Timepoint')
-mc_grp_summ_pivot.head()
+mc_grp_pct_df = pd.DataFrame(mc_grp_pct)
+mc_grp_pct_df.head()
+
 # Splice the data between passing and failing drugs
 
 
@@ -233,10 +231,10 @@ mc_grp_summ_pivot.head()
 
 
 # Call functions to implement the function calls
-
+mc_grp_pct_df.plot(grid=True,kind='bar',title="Tumor Change in 45 Day Treatment")
 
 # Save the Figure
-
+plt.savefig('summpct.png')
 
 # Show the Figure
 #fig.show()
