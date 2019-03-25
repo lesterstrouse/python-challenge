@@ -13,7 +13,7 @@
 # ### Note
 # * Instructions have been included for each segment. You do not have to follow them exactly, but they are included to help you think through the steps.
 
-# In[2]:
+# In[17]:
 
 
 # Dependencies and Setup
@@ -30,6 +30,7 @@ student_data = pd.read_csv(student_data_to_load)
 
 # Combine the data into a single datase
 school_data_complete = pd.merge(student_data, school_data, how="left", on=["school_name", "school_name"])
+school_data_complete.head()
 
 
 # ## District Summary
@@ -54,19 +55,19 @@ school_data_complete = pd.merge(student_data, school_data, how="left", on=["scho
 # 
 # * Optional: give the displayed data cleaner formatting
 
-# In[3]:
+# In[6]:
 
 
 student_data.head()
 
 
-# In[4]:
+# In[7]:
 
 
 school_data.head()
 
 
-# In[5]:
+# In[8]:
 
 
 student_count = school_data_complete['student_name'].count()
@@ -104,7 +105,7 @@ school_df
 
 # * Sort and display the top five schools in overall passing rate
 
-# In[6]:
+# In[9]:
 
 
 #sch_count_df = pd.DataFrame(school_data_complete['school_name'].value_counts())
@@ -122,10 +123,10 @@ PerStudent_budg = school_budget/Student_count
 
 #ave_total = (ave_math + ave_read)/2
 passr=school_data_complete.loc[(school_data_complete['reading_score']>69)].groupby('school_name')['student_name'].count().values
-passm=school_data_complete.loc[(school_data_complete['math_score']>69)].groupby('school_name')['student_name'].count().values#
+passm=school_data_complete.loc[(school_data_complete['math_score']>69)].groupby('school_name')['student_name'].count().values
 
 
-# In[21]:
+# In[11]:
 
 
 school_dct_sch = {'Type':school_type,'Total Students':Student_count,                'Budget':school_budget,'PerStudent Budget':PerStudent_budg,                 'Average Math Score':ave_math,'Average Reading Score':ave_read,                'Pass Read Cnt':passr,'Pass Math Cnt':passm}
@@ -141,7 +142,7 @@ school_df_ave.head()
 
 # * Sort and display the five worst-performing schools
 
-# In[22]:
+# In[12]:
 
 
 school_df_ave.tail()
@@ -159,15 +160,33 @@ school_df_ave.tail()
 #   
 #   * Optional: give the displayed data cleaner formatting
 
-# In[15]:
+# In[56]:
 
 
-
+sch_group_9th=school_data_complete.loc[(school_data_complete['grade']=='9th')].groupby('school_name')['math_score'].mean()
+sch_group_10th=school_data_complete.loc[(school_data_complete['grade']=='10th')].groupby('school_name')['math_score'].mean()
+sch_group_11th=school_data_complete.loc[(school_data_complete['grade']=='11th')].groupby('school_name')['math_score'].mean()
+sch_group_12th=school_data_complete.loc[(school_data_complete['grade']=='12th')].groupby('school_name')['math_score'].mean()
+sch_group_grade = pd.concat([sch_group_9th,sch_group_10th,sch_group_11th,sch_group_12th],axis=1)#,ignore_index=True)
+sch_grp_grade_df = pd.DataFrame(sch_group_grade)#, columns=['9th', '10th', '11th', '12th'])
+sch_grp_grade_df.head()
 
 
 # ## Reading Score by Grade 
 
 # * Perform the same operations as above for reading scores
+
+# In[45]:
+
+
+sch_group_9th=school_data_complete.loc[(school_data_complete['grade']=='9th')].groupby('school_name')['reading_score'].mean()
+sch_group_10th=school_data_complete.loc[(school_data_complete['grade']=='10th')].groupby('school_name')['reading_score'].mean()
+sch_group_11th=school_data_complete.loc[(school_data_complete['grade']=='11th')].groupby('school_name')['reading_score'].mean()
+sch_group_12th=school_data_complete.loc[(school_data_complete['grade']=='12th')].groupby('school_name')['reading_score'].mean()
+sch_group_grade = pd.concat([sch_group_9th,sch_group_10th,sch_group_11th,sch_group_12th],axis=1)
+sch_grp_grade_df = pd.DataFrame(sch_group_grade)#,columns=['9th','10th','11th','12th'])
+sch_grp_grade_df.head()
+
 
 # In[16]:
 
@@ -184,12 +203,16 @@ school_df_ave.tail()
 #   * % Passing Reading
 #   * Overall Passing Rate (Average of the above two)
 
-# In[17]:
+# In[71]:
 
 
 # Sample bins. Feel free to create your own bins.
 spending_bins = [0, 585, 615, 645, 675]
 group_names = ["<$585", "$585-615", "$615-645", "$645-675"]
+school_df_ave['Per Student Spending'] = pd.cut(school_df_ave['PerStudent Budget'],spending_bins,labels=group_names)
+school_df_mean = school_df_ave.groupby('Per Student Spending').mean()
+school_df_mean_prt = school_df_mean.drop(columns=['Total Students','Budget','PerStudent Budget','Pass Read Cnt','Pass Math Cnt'])
+school_df_mean_prt.head()
 
 
 # In[18]:
@@ -202,12 +225,16 @@ group_names = ["<$585", "$585-615", "$615-645", "$645-675"]
 
 # * Perform the same operations as above, based on school size.
 
-# In[ ]:
+# In[72]:
 
 
 # Sample bins. Feel free to create your own bins.
 size_bins = [0, 1000, 2000, 5000]
 group_names = ["Small (<1000)", "Medium (1000-2000)", "Large (2000-5000)"]
+school_df_ave['School Size'] = pd.cut(school_df_ave['Total Students'],size_bins,labels=group_names)
+school_df_mean = school_df_ave.groupby('School Size').mean()
+school_df_mean_prt = school_df_mean.drop(columns=['Total Students','Budget','PerStudent Budget','Pass Read Cnt','Pass Math Cnt'])
+school_df_mean_prt.head()
 
 
 # In[19]:
@@ -220,8 +247,10 @@ group_names = ["Small (<1000)", "Medium (1000-2000)", "Large (2000-5000)"]
 
 # * Perform the same operations as above, based on school type.
 
-# In[20]:
+# In[73]:
 
 
-
+school_df_mean = school_df_ave.groupby('Type').mean()
+school_df_mean_prt = school_df_mean.drop(columns=['Total Students','Budget','PerStudent Budget','Pass Read Cnt','Pass Math Cnt'])
+school_df_mean_prt.head()
 
