@@ -181,6 +181,12 @@ api_df.plot(x='Lat',y='Cloudiness',kind='Scatter',title='City Latitude vs Cloudi
 
 # #### Latitude vs. Wind Speed Plot
 
+# In[25]:
+
+
+api_df.plot(x='Lat',y='Wind Speed',kind='Scatter',title='City Latitude vs Windspeed(03/29/19)',grid=True)
+
+
 # In[9]:
 
 
