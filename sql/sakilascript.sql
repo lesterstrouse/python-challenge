@@ -26,4 +26,4 @@ where title = 'Hunchback Impossible';
 select first_name, last_name, sum(amount) from customer c join payment p on c.customer_id = p.customer_id group by last_name;
 select title from film where film_id in (select film_id from film where title like'q%' or title like 'k%')
 and language_id in (select language_id from language where name = 'english'); 
-select * from language;
+select first_name, last_name from actor a where actor_id in (select actor_id from film_actor where film_id in (select film_id from film where title = 'alone trip'));
