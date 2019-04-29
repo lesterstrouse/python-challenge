@@ -65,10 +65,10 @@ for column in columns:
     print(column["name"], column["type"])
 
 
-# In[10]:
+# In[23]:
 
 
-data = engine.execute("SELECT date,prcp FROM measurement")
+data = engine.execute("SELECT * FROM measurement")
 for record in data:
     print(record)
 
@@ -129,7 +129,6 @@ begindate = dt.datetime.strftime(begindat,'%Y-%m-%d')
 #print(begindate)
 # Perform a query to retrieve the data and precipitation scores
 precip = session.query(Measurement.prcp, Measurement.date).filter(Measurement.date >= f"{begindate}").all()
-#print(precip)
 # Save the query results as a Pandas DataFrame and set the index to the date column
 precip_df = pd.DataFrame(precip,columns=['precip','date'])
 precip_df.set_index(precip_df['date'], inplace=True)
@@ -150,36 +149,48 @@ precip_df.describe()
 
 # ![describe](Images/describe.png)
 
-# In[ ]:
+# In[20]:
 
 
 # Design a query to show how many stations are available in this dataset?
+stationdata = session.query(Station)
+print('station count = ', stationdata.count())
 
 
-# In[ ]:
+# In[30]:
 
 
 # What are the most active stations? (i.e. what stations have the most rows)?
 # List the stations and the counts in descending order.
+stationsql = engine.execute("SELECT station, count(station) FROM measurement group by station order by count(station) desc")
+for row in stationsql:
+    print(row)
 
 
-# In[ ]:
+# In[48]:
 
 
 # Using the station id from the previous query, calculate the lowest temperature recorded, 
 # highest temperature recorded, and average temperature most active station?
+measave=session.query(Measurement.station,func.min(Measurement.tobs),func.max(Measurement.tobs),func.avg(Measurement.tobs)).filter(Measurement.station == 'USC00519281').all()
+for row in measave:
+    print(row)
 
 
-# In[ ]:
+# In[73]:
 
 
 # Choose the station with the highest number of temperature observations.
 # Query the last 12 months of temperature observation data for this station and plot the results as a histogram
+temptobs = session.query(Measurement.tobs).filter(Measurement.date >= f"{begindate}", Measurement.station =="USC00519281").all()
+# Save the query results as a Pandas DataFrame 
+precip_df = pd.DataFrame(temptobs,columns=['tobs'])
+precip_df.plot(kind='hist')  
 
 
 # ![precipitation](Images/station-histogram.png)
 
-# In[ ]:
+# In[74]:
 
 
 # This function called `calc_temps` will accept start date and end date in the format '%Y-%m-%d' 
@@ -201,27 +212,32 @@ def calc_temps(start_date, end_date):
 print(calc_temps('2012-02-28', '2012-03-05'))
 
 
-# In[ ]:
+# In[75]:
 
 
 # Use your previous function `calc_temps` to calculate the tmin, tavg, and tmax 
 # for your trip using the previous year's data for those same dates.
+print(calc_temps('2017-08-05','2017-08-16'))
 
 
-# In[ ]:
+# In[77]:
 
 
 # Plot the results from your previous query as a bar chart. 
 # Use "Trip Avg Temp" as your Title
 # Use the average temperature for the y value
 # Use the peak-to-peak (tmax-tmin) value as the y error bar (yerr)
+temptobs = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).        filter(Measurement.date >= '2017-08-05').filter(Measurement.date <= '2017-08-16').all()
+precip_df = pd.DataFrame(temptobs,columns=['min','avg','max'])
+precip_df.plot(kind='bar',title="Trip Avg Temp")  
 
 
-# In[ ]:
+# In[83]:
 
 
 # Calculate the total amount of rainfall per weather station for your trip dates using the previous year's matching dates.
 # Sort this in descending order by precipitation amount and list the station, name, latitude, longitude, and elevation
+session.query(Measurement.station,func.sum(Measurement.prcp),Station.latitude,Station.longitude,Station.elevation).group_by(Measurement.station).order_by(func.sum(Measurement.prcp).desc()).filter(Measurement.station==Station.station).filter(Measurement.date >= '2017-08-05').filter(Measurement.date <= '2017-08-16').all()
 
 
 # ## Optional Challenge Assignment
@@ -234,7 +250,7 @@ print(calc_temps('2012-02-28', '2012-03-05'))
 
 def daily_normals(date):
     """Daily Normals.
-    
+
     Args:
         date (str): A date string in the format '%m-%d'
         
