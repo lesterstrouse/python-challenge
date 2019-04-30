@@ -35,10 +35,14 @@ def home():
         f"/api/v1.0/<start>"
         f"/api/v1.0/<start>/<end>")
 @app.route("/api/v1.0/precipitation")
-    return(jsonify(dict(session.query(Measurement.prcp, Measurement.date).filter(Measurement.date >= f"{begindate}").all()))
+    return(jsonify(dict(session.query(Measurement.date, Measurement.prcp).filter(Measurement.date >= f"{begindate}").all()))
 @app.route("/api/v1.0/stations")
+    return(jsonify(session.query(Station.station).all()))
 @app.route("/api/v1.0/tobs")
+    return(jsonify(session.query(Measurement.date, Measurement.tobs).filter(Measurement.date >= f"{begindate}").all()))
 @app.route("/api/v1.0/<start>")
+
 @app.route("/api/v1.0/<start>/<end>")
+
 if __name__ == "__main__":
     app.run(debug=True)
