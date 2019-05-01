@@ -28,28 +28,28 @@ app = Flask(__name__)
 def home():
     print("Server received request for 'Home' page...")
     return (
-        f"Available Routes:<br/>"
-        f"/api/v1.0/precipitation"
-        f"/api/v1.0/stations"
-        f"/api/v1.0/tobs"
-        f"/api/v1.0/<start>"
-        f"/api/v1.0/<start>/<end>")
+        f"Available Routes:><br/>"
+        f"/api/v1.0/precipitation<br/>"
+        f"/api/v1.0/stations<br/>"
+        f"/api/v1.0/tobs<br/>"
+        f"/api/v1.0/start<br/>"
+        f"/api/v1.0/start/end<br/>")
 @app.route("/api/v1.0/precipitation")
 def precip():
     return jsonify(dict(session.query(Measurement.date, Measurement.prcp).filter(Measurement.date >= f"{begindate}").all()))
 @app.route("/api/v1.0/stations")
 def station(): 
-    return jsonify(session.query(Station.station).all())
+    return jsonify(list(session.query(Station.station).all()))
 @app.route("/api/v1.0/tobs")
 def tobs():
-    return jsonify(session.query(Measurement.date, Measurement.tobs).filter(Measurement.date >= f"{begindate}").all())
+    return jsonify(list(session.query(Measurement.date, Measurement.tobs).filter(Measurement.date >= f"{begindate}").all()))
 @app.route("/api/v1.0/<start>")
 def minmax():
-    return jsonify(session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
-        filter(Measurement.date >= {start}).all())
+    return jsonify(list(session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+        filter(Measurement.date >= {start}).all()))
 @app.route("/api/v1.0/<start>/<end>")
 def minmaxint():
-    return jsonify(session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
-        filter(Measurement.date >= {start}).filter(Measurement.date <= {end}).all())
+    return jsonify(list(session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+        filter(Measurement.date >= {start}).filter(Measurement.date <= {end}).all()))
 if __name__ == "__main__":
     app.run(debug=True)
