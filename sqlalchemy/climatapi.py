@@ -35,16 +35,21 @@ def home():
         f"/api/v1.0/<start>"
         f"/api/v1.0/<start>/<end>")
 @app.route("/api/v1.0/precipitation")
-    return(jsonify(dict(session.query(Measurement.date, Measurement.prcp).filter(Measurement.date >= f"{begindate}").all()))
+def precip():
+    return jsonify(dict(session.query(Measurement.date, Measurement.prcp).filter(Measurement.date >= f"{begindate}").all()))
 @app.route("/api/v1.0/stations")
-    return(jsonify(session.query(Station.station).all()))
+def station(): 
+    return jsonify(session.query(Station.station).all())
 @app.route("/api/v1.0/tobs")
-    return(jsonify(session.query(Measurement.date, Measurement.tobs).filter(Measurement.date >= f"{begindate}").all()))
+def tobs():
+    return jsonify(session.query(Measurement.date, Measurement.tobs).filter(Measurement.date >= f"{begindate}").all())
 @app.route("/api/v1.0/<start>")
-    return(jsonify(session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
-        filter(Measurement.date >= {start}).all()))
+def minmax():
+    return jsonify(session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+        filter(Measurement.date >= {start}).all())
 @app.route("/api/v1.0/<start>/<end>")
-    return(jsonify(session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
-        filter(Measurement.date >= {start}).filter(Measurement.date <= {end}).all()))
+def minmaxint():
+    return jsonify(session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
+        filter(Measurement.date >= {start}).filter(Measurement.date <= {end}).all())
 if __name__ == "__main__":
     app.run(debug=True)
