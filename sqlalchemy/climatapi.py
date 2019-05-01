@@ -5,7 +5,7 @@ import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func, inspect
-from flask import flask, jsonify
+from flask import Flask, jsonify
 engine = create_engine("sqlite:///Resources/hawaii.sqlite")
 # reflect an existing database into a new model
 Base = automap_base()
@@ -22,7 +22,7 @@ for row in lastdate:
      lastdat = dt.datetime.strptime(row[0],'%Y-%m-%d')
 begindat = lastdat - dt.timedelta(days = 365)
 begindate = dt.datetime.strftime(begindat,'%Y-%m-%d')
-app = flask(__name__)
+app = Flask(__name__)
 # 3. Define what to do when a user hits the index route
 @app.route("/")
 def home():
