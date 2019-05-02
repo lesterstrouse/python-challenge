@@ -44,11 +44,11 @@ def station():
 def tobs():
     return jsonify(list(session.query(Measurement.date, Measurement.tobs).filter(Measurement.date >= f"{begindate}").all()))
 @app.route("/api/v1.0/<start>")
-def minmax():
+def minmax(start):
     return jsonify(list(session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
         filter(Measurement.date >= {start}).all()))
 @app.route("/api/v1.0/<start>/<end>")
-def minmaxint():
+def minmaxint(start,end):
     return jsonify(list(session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).\
         filter(Measurement.date >= {start}).filter(Measurement.date <= {end}).all()))
 if __name__ == "__main__":
